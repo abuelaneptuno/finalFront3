@@ -1,30 +1,53 @@
+import { useMemo, createContext, useContext, useEffect, useState, useReducer } from "react";
 import axios from "axios";
-import React from "react";
-import { reducer } from "../Reducer/reducer";
-import { createContext, useContext, useState, useEffect, useReducer } from "react";
+import { reducerTemas } from "../Reducer/reducerTemas";
+import { reducerFavoritos } from "../Reducer/reducerFavoritos";
+  
+  const initialState = { color: "light", data: [] };
+  export const GlobalStates = createContext();
 
-const GlobalStates = createContext()
-const initialState = "light"
+  const Context = ({ children }) => {
+  const [dentistas, setDentistas] = useState([]);
+  const url = "https://jsonplaceholder.typicode.com/users";
 
-const Context = ({children}) => {
+  useEffect(() => {
+    axios(url).then((res) => setDentistas(res.data));
+  }, []);
 
-    const [data, setData] = useState([])
-    const [state, dispatch] = useReducer(reducer, initialState)
+  function initFav(initialValue) {
+    return localStorage.getItem("favoritos")
+      ? JSON.parse(localStorage.getItem("favoritos"))
+      : initialValue;
+  }
 
-    useEffect(() =>{
-        axios("https://dhodonto.ctdprojetos.com.br/dentista").then(res => setData(res.data)); 
-    }, [])
+  const [stateFav, dispatchFav] = useReducer(
+    reducerFavoritos,
+    initialState.data,
+    initFav
+  );
 
-    return (
-        <GlobalStates.Provider
-            value={{data, state, dispatch}}
-        >
-            {children}
-        </GlobalStates.Provider>
-    )
-}
+  useEffect(() => {
+    localStorage.setItem("favoritos", JSON.stringify(stateFav));
+  }, [stateFav]);
 
-export default Context
+  const [favoritos, setFavoritos] = useState([]);
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("favoritos"));
+    setFavoritos(data);
+  }, [stateFav]);
+
+  const [stateTema, dispatchTema] = useReducer(reducerTemas, initialState);
+
+  const variablesContext = {dentistas, setDentistas, stateTema, dispatchTema, stateFav, dispatchFav, favoritos, setFavoritos};
+
+  return (
+    <GlobalStates.Provider value={{ variablesContext }}>
+      {children}
+    </GlobalStates.Provider>
+  );
+};
+
+export default Context;
 
 export const useGlobalStates = () => {
     return useContext(GlobalStates)

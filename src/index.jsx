@@ -1,31 +1,31 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.min.js";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
 import Home from "./Routes/Home";
-import Login from "./Routes/Login"
 import Detail from "./Routes/Detail"
 import Contact from "./Routes/Contact";
-import App from "./App"
-import "./index.css";
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
-import Context from "./Context/Context";
+import Context from "./Context/context"
+import Favs from './Routes/Favs';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-//Lembre-se de configurar suas rotas e seu contexto aqui
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Context>
+   <Context>
     <BrowserRouter>
     <Routes>
       <Route path="/" element={<App/>}>
-        <Route path="home" element={<Home/>}> 
-          <Route path=":matriPath" element={<Detail/>} /> </Route>
-        <Route path="login" element={<Login/>} />
-        <Route path="contact" element={<Contact/>} />
+        <Route path="home" element={<Home/>} /> 
+        <Route path="contact" element={<Contact />} />
+        <Route path="dentist/:id" element={<Detail />} />
+        <Route path="favoritos" element={<Favs />} />
       </Route>
     </Routes>
     </BrowserRouter>
-    </Context>
+   </Context>
   </React.StrictMode>
 );
+
+

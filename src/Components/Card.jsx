@@ -1,26 +1,33 @@
-import styles from "./Card.module.css";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useGlobalStates } from "../Context/context";
 
-const Card = ({data}) => {
+const Card = ({ name, username, id }) => {
+  const { variablesContext } = useGlobalStates();
+  const { dispatchFav } = variablesContext;
+
+  const addFav = ()=>{
+    dispatchFav({
+      type: "NUEVO_FAV",
+      payload: { name, username, id },
+    });
+  }
 
   return (
-    <>
-      {/* //Na linha seguinte deverá ser feito um teste se a aplicação
-        // está em dark mode e deverá utilizar o css correto */}
-      <div className={`card`}>
-        <img
-          className="card-img-top"
-          src="/images/doctor.jpg"
-          alt="doctor placeholder"
-        />
-        <div className={`card-body ${styles.CardBody}`}>
-          {/* Na linha seguinte o link deverá utilizar a matricula, nome e sobrenome do dentista
-          que vem da API */}
-          <a href={`/dentist/${data.matricula}`}>
-            <h5 className={`card-title ${styles.title}`}> {data.nome + " " + data.sobrenome} </h5>
-          </a>
-        </div>
-      </div>
-    </>
+    <div className="card">
+      <Link to={`/dentist/${id}`}>
+        <div>
+          <h3>Nombre: {name}</h3>
+          <h3>Nombre de usuario: {username}</h3>
+          <h3>ID: {id}</h3>
+        </div></Link>
+        {/* En cada card deberan mostrar en name - username y el id */}
+
+        {/* No debes olvidar que la Card a su vez servira como Link hacia la pagina de detalle */}
+
+        {/* Ademas deberan integrar la logica para guardar cada Card en el localStorage */}
+        <button onClick={addFav} className="favButton">Add fav</button>
+    </div>
   );
 };
 

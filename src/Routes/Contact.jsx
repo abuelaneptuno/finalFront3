@@ -1,38 +1,22 @@
 import React, { useState } from 'react'
+import Form from '../Components/Form'
+import { useGlobalStates } from '../Context/context'
+
+//Este componente debera ser estilado como "dark" o "light" dependiendo del theme del Context
 
 const Contact = () => {
-
-    const [user, setUser] = useState({
-        name: '',
-        email: ''
-    });
-
-    function handleSubmit(e){
-        e.preventDefault();
-        const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
-        if (user.name.length > 5) {
-            if (emailRegex.test(user.email)){
-                alert("Muchas gracias por tu mensaje, " + user.name + ". Te contactaremos cuanto antes por email.")
-            }
-            else {
-                alert("Email inválido.")
-            }
-        } else {
-            alert("Nombre demasiado corto.")
-        }
-        
-    }
+    
+  const { variablesContext } = useGlobalStates();
+  const { stateTema } = variablesContext;
 
   return (
-    <>
-        <form onSubmit={handleSubmit}>
-            <input type="text" placeholder="Nombre completo" onChange={(e) => setUser ({...user, name: e.target.value})}></input>
-            <input type="email" placeholder="Email" onChange={(e) => setUser ({...user, email: e.target.value})}></input>
-            <input type="text" placeholder="Ingrese su mensaje"></input>
-            <button type="submit">Enviar</button>
-        </form>
-    </>
+    <div className={stateTema.color}>
+      <h2>Want to know more?</h2>
+      <p>Send us your questions and we will contact you</p>
+      <Form />
+    </div>
   )
 }
+
 
 export default Contact

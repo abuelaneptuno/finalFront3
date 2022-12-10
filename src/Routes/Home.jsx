@@ -1,32 +1,24 @@
-import { useEffect } from "react";
-import Card from "../Components/Card";
-import { useState } from "react";
-import { useGlobalStates } from "../Context/Context"
+import React from 'react'
+import Card from '../Components/Card'
+import { useGlobalStates } from '../Context/context'
 
 const Home = () => {
-  const [dentistas, setDentistas] = useState([])
-  const {datos} = useGlobalStates()
-
-  const getDentistas = async()=>{
-    const res = await fetch("https://dhodonto.ctdprojetos.com.br/dentista")
-    const data = await res.json()
-    setDentistas(data)
-  }
-
-  useEffect(() => {
-    getDentistas();
-  }, []);
+  const { variablesContext } = useGlobalStates();
+  const { dentistas, stateTema } = variablesContext;
 
   return (
     <>
+    <main className={stateTema.color} >
       <h1>Home</h1>
-      <div className="card-grid container">
-        {dentistas.length
-        ? dentistas.map(dentista => <Card data = {dentista} key={dentista.matricula}/>)
-        : null}   
+      <div className='card-grid'>
+      {dentistas.map((dentista) => (
+            <div key={dentista.id}>
+              <Card name={dentista.name} username={dentista.username} id={dentista.id}  />
+            </div>
+          ))}
       </div>
-    </>
-  );
-};
+    </main></>
+  )
+}
 
-export default Home;
+export default Home
